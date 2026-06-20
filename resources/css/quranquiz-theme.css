@@ -1,0 +1,63 @@
+/*
+  QuranQuiz Design Tokens
+  =========================
+  Palet terinspirasi manuskrip Al-Qur'an kuno (perkamen, tinta emas, sampul kulit):
+  - --ink-deep    : hijau zaitun gelap pekat, bukan emerald terang generik
+  - --parchment   : krem gading seperti kertas manuskrip
+  - --gold-leaf   : emas antik/perunggu untuk aksen & detail
+  - --maroon      : merah marun, aksen sekunder dari sampul/tinta kuno
+  - --ink-text    : hampir hitam untuk teks utama
+  - --parchment-border : krem lebih gelap untuk border/divider halus
+
+  Font: 'Amiri' (display, berjiwa kaligrafi) + 'Inter' (body, netral terbaca)
+*/
+
+:root {
+    --ink-deep: #0B3D2E;
+    --ink-deep-light: #144D3A;
+    --parchment: #F7F3E8;
+    --parchment-dark: #EFE8D6;
+    --gold-leaf: #C9A24B;
+    --gold-leaf-light: #DDBE74;
+    --maroon: #7A2E2E;
+    --ink-text: #1C1C1C;
+    --parchment-border: #E8DFC8;
+}
+
+.font-display {
+    font-family: 'Amiri', 'Georgia', serif;
+}
+
+.font-body {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Motif geometris islami sebagai watermark dekoratif di pojok kartu.
+   Terinspirasi pola bintang delapan (rub el hizb) yang umum di ukiran mihrab. */
+.islamic-motif-corner {
+    position: absolute;
+    width: 96px;
+    height: 96px;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.bg-parchment-texture {
+    background-color: var(--parchment);
+    background-image:
+        radial-gradient(circle at 1px 1px, var(--parchment-border) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+
+/* Bingkai ganda tipis meniru bingkai illuminated manuscript */
+.manuscript-frame {
+    border: 1px solid var(--gold-leaf);
+    outline: 1px solid var(--ink-deep);
+    outline-offset: 4px;
+}
+
+@media (max-width: 640px) {
+    .manuscript-frame {
+        outline-offset: 2px;
+    }
+}
