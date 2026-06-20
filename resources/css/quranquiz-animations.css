@@ -1,0 +1,178 @@
+/*
+  QuranQuiz — Animasi
+  =====================
+  Animasi diterapkan secara terarah, bukan dekorasi acak:
+  - fade-up      : kartu "terungkap" seperti membuka lembar manuskrip (quiz index, leaderboard)
+  - hover lift   : kartu terasa bisa disentuh/diklik
+  - timer-pulse  : rasa tegang saat waktu hampir habis (≤5 detik)
+  - option-pick  : feedback halus saat memilih jawaban
+  - stagger      : ranking leaderboard terungkap satu-satu seperti podium
+  - count-up     : skor akhir "menghitung naik", dipakai dengan JS di result.blade.php
+
+  Menghormati prefers-reduced-motion: semua animasi dimatikan otomatis
+  jika pengguna mengaktifkan pengaturan tersebut di OS/browser mereka.
+*/
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes timerPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes gentleBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes drawCheck {
+    from {
+        stroke-dashoffset: 24;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ===== Entrance: kartu kuis & leaderboard ===== */
+.anim-fade-up {
+    animation: fadeUp 0.5s ease-out both;
+}
+
+.anim-stagger > * {
+    opacity: 0;
+    animation: fadeUp 0.45s ease-out forwards;
+}
+.anim-stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.anim-stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.anim-stagger > *:nth-child(3) { animation-delay: 0.16s; }
+.anim-stagger > *:nth-child(4) { animation-delay: 0.22s; }
+.anim-stagger > *:nth-child(5) { animation-delay: 0.28s; }
+.anim-stagger > *:nth-child(6) { animation-delay: 0.34s; }
+.anim-stagger > *:nth-child(7) { animation-delay: 0.40s; }
+.anim-stagger > *:nth-child(8) { animation-delay: 0.46s; }
+.anim-stagger > *:nth-child(n+9) { animation-delay: 0.50s; }
+
+/* ===== Hover: kartu kuis ===== */
+.card-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(11, 61, 46, 0.18);
+}
+
+/* ===== Timer ===== */
+#timer-badge {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+#timer-badge.is-urgent {
+    animation: timerPulse 1s ease-in-out infinite;
+}
+
+/* ===== Progress bar ===== */
+.progress-fill {
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Pilihan jawaban ===== */
+.option-row {
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+.option-row:active {
+    transform: scale(0.99);
+}
+
+/* ===== Tombol ===== */
+.btn-animated {
+    transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-animated:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px -4px rgba(11, 61, 46, 0.25);
+}
+.btn-animated:active {
+    transform: translateY(0);
+}
+
+/* ===== Navbar: underline aktif ===== */
+.nav-link-underline {
+    position: relative;
+}
+.nav-link-underline::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    bottom: -2px;
+    height: 2px;
+    background-color: var(--gold-leaf);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+.nav-link-underline:hover::after {
+    transform: scaleX(1);
+}
+
+/* ===== Badge ranking leaderboard ===== */
+.rank-badge {
+    animation: fadeUp 0.4s ease-out both;
+}
+.rank-badge-gold {
+    animation: gentleBounce 2.4s ease-in-out infinite;
+}
+
+/* ===== Checkmark jawaban benar (preview soal) ===== */
+.check-draw {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    animation: drawCheck 0.4s ease-out forwards;
+}
+
+/* ===== Skeleton loading tombol generate ===== */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.btn-loading {
+    background-image: linear-gradient(90deg, var(--gold-leaf) 25%, var(--gold-leaf-light) 50%, var(--gold-leaf) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+}
+
+/* ===== Hormati preferensi pengguna ===== */
+@media (prefers-reduced-motion: reduce) {
+    .anim-fade-up,
+    .anim-stagger > *,
+    .rank-badge,
+    .rank-badge-gold,
+    #timer-badge.is-urgent,
+    .check-draw {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .card-lift,
+    .btn-animated,
+    .option-row {
+        transition: none !important;
+    }
+}

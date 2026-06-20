@@ -1,13 +1,13 @@
 <x-app-quranquiz>
 
     @if (session('error'))
-        <div class="mb-6 text-sm rounded-md px-4 py-3" style="background-color: #F5E6E6; color: var(--maroon); border: 1px solid var(--maroon);">
+        <div class="mb-6 text-sm rounded-md px-4 py-3 anim-fade-up" style="background-color: #F5E6E6; color: var(--maroon); border: 1px solid var(--maroon);">
             {{ session('error') }}
         </div>
     @endif
 
     <!-- Hero -->
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 anim-fade-up">
         <p class="text-xs uppercase tracking-[0.2em] font-semibold mb-3" style="color: var(--maroon);">
             Tebak Ayat &amp; Tafsir
         </p>
@@ -20,14 +20,14 @@
     </div>
 
     @if ($quizzes->isEmpty())
-        <div class="manuscript-frame rounded-sm p-12 text-center" style="background-color: white;">
+        <div class="manuscript-frame rounded-sm p-12 text-center anim-fade-up" style="background-color: white;">
             <p class="font-display text-lg" style="color: var(--ink-deep);">Belum ada kuis tersedia</p>
             <p class="text-sm mt-2" style="color: var(--ink-text); opacity: 0.6;">Silakan kembali lagi nanti.</p>
         </div>
     @else
-        <div class="grid gap-6 sm:grid-cols-2">
+        <div class="grid gap-6 sm:grid-cols-2 anim-stagger">
             @foreach ($quizzes as $quiz)
-                <div class="relative overflow-hidden rounded-sm p-6" style="background-color: white; border: 1px solid var(--parchment-border); border-top: 3px solid var(--gold-leaf);">
+                <div class="card-lift relative overflow-hidden rounded-sm p-6" style="background-color: white; border: 1px solid var(--parchment-border); border-top: 3px solid var(--gold-leaf);">
 
                     <!-- Motif geometris pojok -->
                     <svg class="islamic-motif-corner top-0 right-0" viewBox="0 0 96 96">
@@ -44,12 +44,12 @@
 
                     <div class="flex gap-2 relative">
                         <a href="{{ route('quiz.play', $quiz) }}"
-                           class="flex-1 text-center rounded-md px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90"
+                           class="btn-animated flex-1 text-center rounded-md px-4 py-2.5 text-sm font-semibold"
                            style="background-color: var(--ink-deep); color: var(--parchment);">
                             Mulai Kuis
                         </a>
                         <a href="{{ route('quiz.leaderboard', $quiz) }}"
-                           class="rounded-md px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-amber-50"
+                           class="btn-animated rounded-md px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-amber-50"
                            style="border: 1px solid var(--gold-leaf); color: var(--maroon);">
                             Peringkat
                         </a>

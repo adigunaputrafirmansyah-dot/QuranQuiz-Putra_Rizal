@@ -4,19 +4,19 @@
         ← Kembali ke Generate Soal
     </a>
 
-    <div class="text-center mb-10">
+    <div class="text-center mb-10 anim-fade-up">
         <p class="text-xs uppercase tracking-[0.2em] font-semibold mb-3" style="color: var(--maroon);">Preview Soal</p>
         <h1 class="font-display text-3xl" style="color: var(--ink-deep);">{{ $quiz->title }}</h1>
     </div>
 
     @if ($quiz->questions->isEmpty())
-        <div class="manuscript-frame rounded-sm p-12 text-center" style="background-color: white;">
+        <div class="manuscript-frame rounded-sm p-12 text-center anim-fade-up" style="background-color: white;">
             <p class="font-display text-lg" style="color: var(--ink-deep);">Belum ada soal pada quiz ini</p>
         </div>
     @else
-        <div class="space-y-5">
+        <div class="space-y-5 anim-stagger">
             @foreach ($quiz->questions as $index => $question)
-                <div class="rounded-sm p-6" style="background-color: white; border: 1px solid var(--parchment-border); border-left: 4px solid var(--gold-leaf);">
+                <div class="card-lift rounded-sm p-6" style="background-color: white; border: 1px solid var(--parchment-border); border-left: 4px solid var(--gold-leaf);">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-bold uppercase tracking-wide" style="color: var(--maroon);">
                             Soal {{ $index + 1 }} &middot; {{ str_replace('_', ' ', $question->question_type) }}
@@ -43,7 +43,9 @@
                                 <span class="w-5">{{ $option->option_label }}.</span>
                                 <span>{{ $option->option_text }}</span>
                                 @if ($option->is_correct)
-                                    <span class="text-xs" style="color: var(--gold-leaf);">✓ benar</span>
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" style="color: var(--gold-leaf);">
+                                        <path class="check-draw" d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
                                 @endif
                             </div>
                         @endforeach

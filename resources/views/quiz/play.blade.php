@@ -1,11 +1,11 @@
 <x-app-quranquiz>
 
     <!-- Progress & Timer -->
-    <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center justify-between mb-3 anim-fade-up">
         <span class="text-sm font-semibold" style="color: var(--ink-deep);">
             Soal {{ $questionNumber }} dari {{ $quiz->questions->count() }}
         </span>
-        <div class="flex items-center gap-2 px-3 py-1 rounded-full" style="background-color: white; border: 1px solid var(--gold-leaf);">
+        <div id="timer-badge" class="flex items-center gap-2 px-3 py-1 rounded-full" style="background-color: white; border: 1px solid var(--gold-leaf);">
             <svg class="w-4 h-4" style="color: var(--maroon);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -14,12 +14,12 @@
     </div>
 
     <!-- Progress bar -->
-    <div class="w-full h-1.5 rounded-full mb-8 overflow-hidden" style="background-color: var(--parchment-border);">
-        <div class="h-full rounded-full transition-all" style="background-color: var(--gold-leaf); width: {{ ($questionNumber - 1) / $quiz->questions->count() * 100 }}%"></div>
+    <div class="w-full h-1.5 rounded-full mb-8 overflow-hidden anim-fade-up" style="background-color: var(--parchment-border);">
+        <div class="h-full rounded-full progress-fill" style="background-color: var(--gold-leaf); width: {{ ($questionNumber - 1) / $quiz->questions->count() * 100 }}%"></div>
     </div>
 
     <!-- Soal Card dengan bingkai manuskrip -->
-    <div class="manuscript-frame rounded-sm p-8" style="background-color: white;">
+    <div class="manuscript-frame rounded-sm p-8 anim-fade-up" style="background-color: white; animation-delay: 0.08s;">
 
         @if ($question->surah_name)
             <p class="text-xs uppercase tracking-[0.15em] font-semibold mb-4" style="color: var(--maroon);">
@@ -48,9 +48,9 @@
 
             <div class="space-y-2.5">
                 @foreach ($question->options as $option)
-                    <label class="flex items-center gap-3 rounded-md px-4 py-3 cursor-pointer transition-colors duration-150"
+                    <label class="option-row flex items-center gap-3 rounded-md px-4 py-3 cursor-pointer"
                            style="border: 1px solid var(--parchment-border);"
-                           onmouseover="this.style.borderColor='var(--gold-leaf)'"
+                           onmouseover="if(!this.querySelector('input').checked) this.style.borderColor='var(--gold-leaf)'"
                            onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='var(--parchment-border)'">
                         <input type="radio" name="option_id" value="{{ $option->id }}" required
                                onclick="document.querySelectorAll('#answer-form label').forEach(l => { l.style.borderColor='var(--parchment-border)'; l.style.backgroundColor=''; }); this.closest('label').style.borderColor='var(--ink-deep)'; this.closest('label').style.backgroundColor='var(--parchment)';"
@@ -61,8 +61,8 @@
                 @endforeach
             </div>
 
-            <button type="submit"
-                    class="mt-7 w-full rounded-md py-3 text-sm font-semibold transition-opacity hover:opacity-90"
+            <button type="submit" id="submit-btn"
+                    class="btn-animated mt-7 w-full rounded-md py-3 text-sm font-semibold"
                     style="background-color: var(--ink-deep); color: var(--parchment);">
                 Jawab
             </button>
@@ -77,15 +77,26 @@
             const startedQuestionAt = Date.now();
 
             const timerEl = document.getElementById('timer');
+            const timerBadge = document.getElementById('timer-badge');
             const answerTimeInput = document.getElementById('answer_time_seconds');
             const form = document.getElementById('answer-form');
+            const submitBtn = document.getElementById('submit-btn');
 
             function render(seconds) {
                 const m = Math.floor(seconds / 60).toString().padStart(2, '0');
                 const s = (seconds % 60).toString().padStart(2, '0');
                 timerEl.textContent = `${m}:${s}`;
-                timerEl.style.color = seconds <= 5 ? '#7A2E2E' : '#7A2E2E';
-                timerEl.style.opacity = seconds <= 5 ? '1' : '0.85';
+
+                // Rasa tegang: pulse + warna lebih pekat saat waktu hampir habis
+                if (seconds <= 5) {
+                    timerBadge.classList.add('is-urgent');
+                    timerBadge.style.borderColor = 'var(--maroon)';
+                    timerBadge.style.backgroundColor = '#FBEFEF';
+                } else {
+                    timerBadge.classList.remove('is-urgent');
+                    timerBadge.style.borderColor = 'var(--gold-leaf)';
+                    timerBadge.style.backgroundColor = 'white';
+                }
             }
 
             render(questionSeconds);
@@ -109,6 +120,11 @@
                 clearInterval(interval);
                 const elapsed = Math.round((Date.now() - startedQuestionAt) / 1000);
                 answerTimeInput.value = Math.min(elapsed, secondsPerQuestion);
+
+                // Feedback halus: tombol menunjukkan sedang memproses
+                submitBtn.textContent = 'Memeriksa jawaban...';
+                submitBtn.style.opacity = '0.75';
+                submitBtn.disabled = true;
             });
         })();
     </script>

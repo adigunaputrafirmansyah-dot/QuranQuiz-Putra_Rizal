@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    @vite(['resources/css/app.css', 'resources/css/quranquiz-theme.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/quranquiz-theme.css', 'resources/css/quranquiz-animations.css', 'resources/js/app.js'])
 </head>
 <body class="font-body antialiased" style="background-color: var(--parchment); color: var(--ink-text);">
 
@@ -46,8 +46,8 @@
                         @foreach ($navItems as $item)
                             @if (\Illuminate\Support\Facades\Route::has($item['route']))
                                 <a href="{{ route($item['route']) }}"
-                                   class="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 {{ request()->routeIs($item['pattern']) ? '' : 'hover:bg-white/5' }}"
-                                   style="color: {{ request()->routeIs($item['pattern']) ? '#0B3D2E' : '#F7F3E8' }}; {{ request()->routeIs($item['pattern']) ? 'background-color: var(--gold-leaf);' : '' }}">
+                                   class="nav-link-underline px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs($item['pattern']) ? '' : 'hover:bg-white/5' }}"
+                                   style="color: {{ request()->routeIs($item['pattern']) ? '#0B3D2E' : '#F7F3E8' }}; {{ request()->routeIs($item['pattern']) ? 'background-color: var(--gold-leaf); transition: background-color 0.2s ease;' : 'transition: background-color 0.2s ease;' }}">
                                     {{ $item['label'] }}
                                 </a>
                             @endif
@@ -60,19 +60,19 @@
                             <span class="text-sm" style="color: var(--gold-leaf-light);">{{ auth()->user()->name }}</span>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="text-sm px-3 py-1.5 rounded-md border transition-colors duration-150 hover:bg-white/5" style="color: var(--parchment); border-color: var(--gold-leaf);">
+                                <button type="submit" class="btn-animated text-sm px-3 py-1.5 rounded-md border" style="color: var(--parchment); border-color: var(--gold-leaf);">
                                     Keluar
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="text-sm font-medium px-4 py-1.5 rounded-md" style="background-color: var(--gold-leaf); color: var(--ink-deep);">
+                            <a href="{{ route('login') }}" class="btn-animated text-sm font-medium px-4 py-1.5 rounded-md" style="background-color: var(--gold-leaf); color: var(--ink-deep);">
                                 Masuk
                             </a>
                         @endauth
                     </div>
 
                     <!-- Mobile toggle -->
-                    <button x-data x-on:click="$refs.mobileMenu.classList.toggle('hidden')" class="sm:hidden p-2" style="color: var(--parchment);">
+                    <button x-data x-on:click="$refs.mobileMenu.classList.toggle('hidden')" class="sm:hidden p-2" style="color: var(--parchment); transition: transform 0.2s ease;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
