@@ -26,5 +26,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/{quiz}/leaderboard', [LeaderboardController::class, 'show'])->name('quiz.leaderboard');
     Route::get('/leaderboard', [LeaderboardController::class, 'global'])->name('leaderboard.global');
 });
-
+require __DIR__.'/web-admin-routes.php';
 require __DIR__.'/auth.php';

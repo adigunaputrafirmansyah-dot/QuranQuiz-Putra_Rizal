@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('leaderboard.global')" :active="request()->routeIs('leaderboard.global')">
                         {{ __('Leaderboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.generate-questions')" :active="request()->routeIs('admin.generate-questions*')">
+                        {{ __('Generate Soal') }}
+                    </x-nav-link>
                 </div>
             </div>
 
